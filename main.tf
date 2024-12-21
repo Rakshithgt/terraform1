@@ -3,24 +3,24 @@ provider "aws" {
 }
 
 resource "aws_vpc" "main" {
-  cidr_block           = var.vpc_cidr_block
+  cidr_block           = var.vpc-cidr_block
   enable_dns_support   = true
   enable_dns_hostnames = true
 
   tags = {
-    Name    = var.vpc_tag
+    Name    = var.vpc_tags
     Service = "Terraform"
   }
 }
 
 resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = var.subnet_cidr_block
+  cidr_block              = var.subnet-cidr_block
   map_public_ip_on_launch = true
   availability_zone       = var.subnet_az
 
   tags = {
-    Name    = var.subnet_tag
+    Name    = "var.Subnet_tag"
     Service = "Terraform"
   }
 }
@@ -34,6 +34,7 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
+
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
@@ -46,11 +47,6 @@ resource "aws_route_table" "public" {
     Name    = var.rt_tag
     Service = "Terraform"
   }
-}
-
-resource "aws_route_table_association" "public" {
-  subnet_id      = aws_subnet.public.id
-  route_table_id = aws_route_table.public.id
 }
 
 resource "aws_security_group" "allow_all" {
@@ -85,9 +81,8 @@ resource "aws_security_group" "allow_all" {
     Service = "Terraform"
   }
 }
-
 resource "aws_instance" "web-1" {
-  ami                         = "ami-0866a3c8686eaeeba"
+  ami                         = "ami-053b12d3152c0cc71"
   availability_zone           = var.ec2_az
   instance_type               = var.ec2_type
   key_name                    = var.key_name
@@ -95,9 +90,8 @@ resource "aws_instance" "web-1" {
   vpc_security_group_ids      = ["${aws_security_group.allow_all.id}"]
   associate_public_ip_address = true
   tags = {
-    Name       = "Prod-Server"
-    Env        = "Prod"
-    Owner      = "sai"
-    CostCenter = "ABCD"
+    Name  = "Prod-Server"
+    Env   = "Prod"
+    Owner = "rakshith"
   }
 }
